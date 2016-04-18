@@ -53,6 +53,7 @@ repositories {
 }
 
 dependencies {
+    compile "mcp.mobius.waila:Waila:1.5.10_1.7.10"
     compile "net.industrial-craft:industrialcraft-2:2.2.726-experimental:api"
     compile "Azanor:Thaumcraft:4.2.3.5:deobf@jar"
     // you may put jars on which you depend on in ./libs
