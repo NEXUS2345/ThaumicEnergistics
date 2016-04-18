@@ -2,13 +2,21 @@ package thaumicenergistics.common.container;
 
 import java.util.Collection;
 import javax.annotation.Nullable;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import appeng.api.config.Actionable;
+import appeng.api.config.SecurityPermissions;
+import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridNode;
+import appeng.api.networking.security.BaseActionSource;
+import appeng.api.networking.security.ISecurityGrid;
+import appeng.api.networking.security.MachineSource;
+import appeng.api.networking.security.PlayerSource;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import thaumcraft.api.aspects.Aspect;
 import thaumicenergistics.api.grid.ICraftingIssuerHost;
 import thaumicenergistics.api.grid.IMEEssentiaMonitor;
@@ -27,20 +35,12 @@ import thaumicenergistics.common.storage.AspectStack;
 import thaumicenergistics.common.storage.EssentiaRepo;
 import thaumicenergistics.common.utils.EffectiveSide;
 import thaumicenergistics.common.utils.ThEUtils;
-import appeng.api.config.Actionable;
-import appeng.api.config.SecurityPermissions;
-import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.security.BaseActionSource;
-import appeng.api.networking.security.ISecurityGrid;
-import appeng.api.networking.security.MachineSource;
-import appeng.api.networking.security.PlayerSource;
 
 /**
  * Base class for cell and terminal inventory containers
- * 
+ *
  * @author Nividica
- * 
+ *
  */
 public abstract class ContainerEssentiaCellTerminalBase
 	extends ContainerWithPlayerInventory
@@ -54,7 +54,7 @@ public abstract class ContainerEssentiaCellTerminalBase
 	/**
 	 * Y position for the output slot
 	 */
-	private static final int OUTPUT_POSITION_Y = 74;
+	private static final int OUTPUT_POSITION_Y = 92;
 
 	/**
 	 * X position for the input slot
@@ -64,17 +64,17 @@ public abstract class ContainerEssentiaCellTerminalBase
 	/**
 	 * Y position for the input slot
 	 */
-	private static final int INPUT_POSITION_Y = 74;
+	private static final int INPUT_POSITION_Y = ContainerEssentiaCellTerminalBase.OUTPUT_POSITION_Y;
 
 	/**
 	 * Y position for the player inventory
 	 */
-	private static final int PLAYER_INV_POSITION_Y = 104;
+	private static final int PLAYER_INV_POSITION_Y = 122;
 
 	/**
 	 * Y position for the hotbar inventory
 	 */
-	private static final int HOTBAR_INV_POSITION_Y = 162;
+	private static final int HOTBAR_INV_POSITION_Y = 180;
 
 	/**
 	 * The minimum amount of time to wait before playing
@@ -161,7 +161,7 @@ public abstract class ContainerEssentiaCellTerminalBase
 
 	/**
 	 * Create the container and register the owner
-	 * 
+	 *
 	 * @param player
 	 */
 	public ContainerEssentiaCellTerminalBase( final EntityPlayer player )
@@ -181,7 +181,7 @@ public abstract class ContainerEssentiaCellTerminalBase
 
 	/**
 	 * Attach this container to the Essentia monitor
-	 * 
+	 *
 	 * @param essentiaMonitor
 	 */
 	private boolean attachToMonitor( final IMEEssentiaMonitor eMonitor )
@@ -217,7 +217,7 @@ public abstract class ContainerEssentiaCellTerminalBase
 
 	/**
 	 * Returns true if the specified stack can be merged into the output slot.
-	 * 
+	 *
 	 * @param stackToMerge
 	 * @return True if the slot is empty,
 	 * or if can be merged by increasing the slots stacksize by the specified stacks stacksize.
@@ -266,7 +266,7 @@ public abstract class ContainerEssentiaCellTerminalBase
 
 	/**
 	 * Returns if the player has the requested permission or not.
-	 * 
+	 *
 	 * @param perm
 	 * @param actionSource
 	 * @return
@@ -306,14 +306,14 @@ public abstract class ContainerEssentiaCellTerminalBase
 
 	/**
 	 * Drains an essentia container item.
-	 * 
+	 *
 	 * @param container
 	 * @param actionSource
 	 * @param mode
 	 * @return The result of the drain. <AmountDrained, NewContainer>
 	 */
 	@Nullable
-	private ImmutablePair<Integer, ItemStack> drainContainer( final ItemStack container, final BaseActionSource actionSource,
+	private ImmutablePair<Integer, ItemStack> drainContainer(	final ItemStack container, final BaseActionSource actionSource,
 																final Actionable mode )
 	{
 		// Ensure there is a container
@@ -365,7 +365,7 @@ public abstract class ContainerEssentiaCellTerminalBase
 
 	/**
 	 * Fills an essentia container item.
-	 * 
+	 *
 	 * @param withAspect
 	 * @param container
 	 * @param actionSource
@@ -373,7 +373,7 @@ public abstract class ContainerEssentiaCellTerminalBase
 	 * @return The result of the fill. <AmountFilled, NewContainer>
 	 */
 	@Nullable
-	private ImmutablePair<Integer, ItemStack> fillContainer( final Aspect withAspect, final ItemStack container,
+	private ImmutablePair<Integer, ItemStack> fillContainer(	final Aspect withAspect, final ItemStack container,
 																final BaseActionSource actionSource, final Actionable mode )
 	{
 		// Ensure there is an aspect
@@ -419,7 +419,7 @@ public abstract class ContainerEssentiaCellTerminalBase
 
 	/**
 	 * Binds the container to the specified inventory and the players inventory.
-	 * 
+	 *
 	 * @param inventory
 	 */
 	protected void bindToInventory( final IInventory inventory )
@@ -519,14 +519,14 @@ public abstract class ContainerEssentiaCellTerminalBase
 
 	/**
 	 * Gets the action source.
-	 * 
+	 *
 	 * @return
 	 */
 	protected abstract BaseActionSource getActionSource();
 
 	/**
 	 * Gets the grid for the host.
-	 * 
+	 *
 	 * @return
 	 */
 	@Nullable
@@ -534,7 +534,7 @@ public abstract class ContainerEssentiaCellTerminalBase
 
 	/**
 	 * Return the selected aspect stored in the host.
-	 * 
+	 *
 	 * @return
 	 */
 	@Nullable
@@ -542,7 +542,7 @@ public abstract class ContainerEssentiaCellTerminalBase
 
 	/**
 	 * Attempts to get a new essentia monitor.
-	 * 
+	 *
 	 * @return
 	 */
 	@Nullable
@@ -550,14 +550,14 @@ public abstract class ContainerEssentiaCellTerminalBase
 
 	/**
 	 * Sets the hosts selected aspect.
-	 * 
+	 *
 	 * @param aspect
 	 */
 	protected abstract void setHostSelectedAspect( @Nullable Aspect aspect );
 
 	/**
 	 * Fills, drains, or sets label aspect.
-	 * 
+	 *
 	 * @param stack
 	 * This is not modified during the course of this function.
 	 * @param aspect
@@ -719,12 +719,12 @@ public abstract class ContainerEssentiaCellTerminalBase
 				break;
 			}
 		}
-		while( this.workCounter < ESSENTIA_TRANSFER_PER_WORK_CYCLE );
+		while( this.workCounter < ContainerEssentiaCellTerminalBase.ESSENTIA_TRANSFER_PER_WORK_CYCLE );
 	}
 
 	/**
 	 * Gets the list of aspect stacks in the container.
-	 * 
+	 *
 	 * @return
 	 */
 	public Collection<IAspectStack> getAspectStackList()
@@ -737,7 +737,7 @@ public abstract class ContainerEssentiaCellTerminalBase
 
 	/**
 	 * Get the player that owns this container
-	 * 
+	 *
 	 * @return
 	 */
 	public EntityPlayer getPlayer()
@@ -747,7 +747,7 @@ public abstract class ContainerEssentiaCellTerminalBase
 
 	/**
 	 * Gets the aspect that the player has selected.
-	 * 
+	 *
 	 * @return
 	 */
 	public Aspect getSelectedAspect()
@@ -785,7 +785,7 @@ public abstract class ContainerEssentiaCellTerminalBase
 
 	/**
 	 * Called when a client has clicked on a craftable aspect.
-	 * 
+	 *
 	 * @param player
 	 * @param result
 	 */
@@ -799,14 +799,14 @@ public abstract class ContainerEssentiaCellTerminalBase
 
 	/**
 	 * Called when a client sends a sorting mode change request.
-	 * 
+	 *
 	 * @param sortingMode
 	 */
 	public abstract void onClientRequestSortModeChange( final EntityPlayer player, boolean backwards );
 
 	/**
 	 * Called when a client sends a view mode change request.
-	 * 
+	 *
 	 * @param player
 	 */
 	public abstract void onClientRequestViewModeChange( final EntityPlayer player, boolean backwards );
@@ -826,7 +826,7 @@ public abstract class ContainerEssentiaCellTerminalBase
 
 	/**
 	 * Called when a player clicked on an aspect while holding an item.
-	 * 
+	 *
 	 * @param player
 	 * @param aspect
 	 */
@@ -900,7 +900,7 @@ public abstract class ContainerEssentiaCellTerminalBase
 
 	/**
 	 * Called by the gui when the aspect list arrives.
-	 * 
+	 *
 	 * @param aspectStackList
 	 */
 	public void onReceivedAspectList( final Collection<IAspectStack> aspectStackList )
@@ -911,7 +911,7 @@ public abstract class ContainerEssentiaCellTerminalBase
 
 	/**
 	 * Called by the gui when a change arrives.
-	 * 
+	 *
 	 * @param change
 	 */
 	public void onReceivedAspectListChange( final IAspectStack change )
@@ -934,7 +934,7 @@ public abstract class ContainerEssentiaCellTerminalBase
 
 	/**
 	 * Called when the the selected aspect has changed.
-	 * 
+	 *
 	 * @param selectedAspect
 	 */
 	public void onReceivedSelectedAspect( final Aspect selectedAspect )
@@ -953,7 +953,7 @@ public abstract class ContainerEssentiaCellTerminalBase
 	/**
 	 * Checks if the transfer sound should play.
 	 * if checkWorkSlots is true the type will be automatically determined.
-	 * 
+	 *
 	 * @param player
 	 * @param checkWorkSlots
 	 * @param type
@@ -1002,7 +1002,7 @@ public abstract class ContainerEssentiaCellTerminalBase
 		}
 
 		// Has enough time passed to play the sound again?
-		if( ( System.currentTimeMillis() - this.lastSoundPlaytime ) > MINIMUM_SOUND_WAIT )
+		if( ( System.currentTimeMillis() - this.lastSoundPlaytime ) > ContainerEssentiaCellTerminalBase.MINIMUM_SOUND_WAIT )
 		{
 			if( type == 0 )
 			{

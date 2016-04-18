@@ -1,4 +1,17 @@
-﻿04/14/2016 1.0.0.3 - Beta
+﻿04/17/2016 1.0.0.5 - Beta
+  Fixed #281: Essentia terminal no longer overlayed by NEI at certain aspect ratios.
+
+04/17/2016 1.0.0.4 - Beta
+  Fixes #300 and #282: Microblock compatibility added.
+  Fixes #293: Added missing redstone method to level emitter.
+  Craftable essentia no longer shows in item terminals.
+  Texture updated: Level Emitter
+  Applied new formatting rules to entire project.
+
+04/15/2016 1.0.0.4 - Beta
+  Cleaned up ASM transformer code.  
+
+04/14/2016 1.0.0.3 - Beta
   Completely moved dev environment to Java 8, Java 7 and earlier is no longer supported.
   Updated forge to 10.13.4.1566
   Fixes #294: Wand move targets for shift+click changed to favor player inventory over ME storage.

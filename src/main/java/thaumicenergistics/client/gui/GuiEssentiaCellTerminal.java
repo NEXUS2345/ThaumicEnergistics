@@ -3,6 +3,12 @@ package thaumicenergistics.client.gui;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+import appeng.api.config.ViewItems;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -11,9 +17,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 import thaumcraft.api.aspects.Aspect;
 import thaumicenergistics.api.IThEWirelessEssentiaTerminal;
 import thaumicenergistics.api.gui.IAspectSelectorContainer;
@@ -37,15 +40,12 @@ import thaumicenergistics.common.parts.PartEssentiaTerminal;
 import thaumicenergistics.common.registries.ThEStrings;
 import thaumicenergistics.common.storage.AspectStackComparator;
 import thaumicenergistics.common.storage.AspectStackComparator.AspectStackComparatorMode;
-import appeng.api.config.ViewItems;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * {@link PartEssentiaTerminal}, {@link ItemWirelessEssentiaTerminal}, and {@link ItemEssentiaCell} GUI
- * 
+ *
  * @author Nividica
- * 
+ *
  */
 @SideOnly(Side.CLIENT)
 public class GuiEssentiaCellTerminal
@@ -155,7 +155,7 @@ public class GuiEssentiaCellTerminal
 
 	/**
 	 * Creates the gui.
-	 * 
+	 *
 	 * @param player
 	 * Player viewing this gui.
 	 * @param container
@@ -173,10 +173,10 @@ public class GuiEssentiaCellTerminal
 		this.player = player;
 
 		// Set the X size
-		this.xSize = GUI_WIDTH;
+		this.xSize = GuiConstants_ECT.GUI_WIDTH;
 
 		// Set the Y size
-		this.ySize = GUI_HEIGHT;
+		this.ySize = GuiConstants_ECT.GUI_HEIGHT;
 
 		// Set the title
 		this.guiTitle = title;
@@ -188,18 +188,18 @@ public class GuiEssentiaCellTerminal
 		this.selectedInfoAmountPrefix = ThEStrings.Gui_SelectedAmount.getLocalized() + ": ";
 
 		// Create the widgets
-		this.aspectWidgets = new WidgetAspectSelector[WIDGETS_PER_PAGE];
+		this.aspectWidgets = new WidgetAspectSelector[GuiConstants_ECT.WIDGETS_PER_PAGE];
 		// Rows
-		for( int y = 0; y < WIDGET_ROWS_PER_PAGE; y++ )
+		for( int y = 0; y < GuiConstants_ECT.WIDGET_ROWS_PER_PAGE; y++ )
 		{
 			// Columns
-			for( int x = 0; x < WIDGETS_PER_ROW; x++ )
+			for( int x = 0; x < GuiConstants_ECT.WIDGETS_PER_ROW; x++ )
 			{
 				WidgetAspectSelector widget = new WidgetAspectSelector( this, null,
-								WIDGET_OFFSET_X + ( x * ThEWidget.WIDGET_SIZE ),
-								WIDGET_OFFSET_Y + ( y * ThEWidget.WIDGET_SIZE ),
+								GuiConstants_ECT.WIDGET_OFFSET_X + ( x * ThEWidget.WIDGET_SIZE ),
+								GuiConstants_ECT.WIDGET_OFFSET_Y + ( y * ThEWidget.WIDGET_SIZE ),
 								player );
-				this.aspectWidgets[( y * WIDGETS_PER_ROW ) + x] = widget;
+				this.aspectWidgets[( y * GuiConstants_ECT.WIDGETS_PER_ROW ) + x] = widget;
 			}
 		}
 
@@ -210,7 +210,7 @@ public class GuiEssentiaCellTerminal
 
 	/**
 	 * Creates the GUI for an essentia cell inside an ME chest.
-	 * 
+	 *
 	 * @param player
 	 * Player viewing the gui.
 	 * @param world
@@ -231,7 +231,7 @@ public class GuiEssentiaCellTerminal
 
 	/**
 	 * Creates the GUI for an essentia terminal.
-	 * 
+	 *
 	 * @param terminal
 	 * @param player
 	 * @return
@@ -244,7 +244,7 @@ public class GuiEssentiaCellTerminal
 
 	/**
 	 * Creates the GUI for a wireless essentia terminal.
-	 * 
+	 *
 	 * @param player
 	 * @return
 	 */
@@ -286,7 +286,7 @@ public class GuiEssentiaCellTerminal
 
 	/**
 	 * True if the mouse is over the widget area
-	 * 
+	 *
 	 * @param mouseX
 	 * @param mouseY
 	 * @return
@@ -294,9 +294,9 @@ public class GuiEssentiaCellTerminal
 	private boolean isMouseOverWidgetArea( final int mouseX, final int mouseY )
 	{
 		return ThEGuiHelper.INSTANCE.isPointInGuiRegion(
-			WIDGET_OFFSET_Y, WIDGET_OFFSET_X,
-			WIDGET_ROWS_PER_PAGE * ThEWidget.WIDGET_SIZE,
-			WIDGETS_PER_ROW * ThEWidget.WIDGET_SIZE,
+			GuiConstants_ECT.WIDGET_OFFSET_Y, GuiConstants_ECT.WIDGET_OFFSET_X,
+			GuiConstants_ECT.WIDGET_ROWS_PER_PAGE * ThEWidget.WIDGET_SIZE,
+			GuiConstants_ECT.WIDGETS_PER_ROW * ThEWidget.WIDGET_SIZE,
 			mouseX, mouseY, this.guiLeft, this.guiTop );
 	}
 
@@ -324,10 +324,10 @@ public class GuiEssentiaCellTerminal
 	private void updateScrollMaximum()
 	{
 		// Calculate the number of widgets the will overflow
-		double overflowWidgets = Math.max( 0, this.matchingSearchStacks.size() - WIDGETS_PER_PAGE );
+		double overflowWidgets = Math.max( 0, this.matchingSearchStacks.size() - GuiConstants_ECT.WIDGETS_PER_PAGE );
 
 		// Calculate how many rows will overflow
-		int overflowRows = (int)Math.ceil( overflowWidgets / WIDGETS_PER_ROW );
+		int overflowRows = (int)Math.ceil( overflowWidgets / GuiConstants_ECT.WIDGETS_PER_ROW );
 
 		// Update if the range has changed
 		if( overflowRows != this.previousOverflowRows )
@@ -390,9 +390,8 @@ public class GuiEssentiaCellTerminal
 			}
 
 			// Is the search term in this aspects tag or name?
-			if( ( this.searchTerm == "" )
-							|| ( stack.getAspectName().contains( this.searchTerm ) )
-							|| ( stack.getAspectTag().contains( this.searchTerm ) ) )
+			if( ( this.searchTerm == "" ) || ( stack.getAspectName().contains( this.searchTerm ) ) ||
+							( stack.getAspectTag().contains( this.searchTerm ) ) )
 			{
 				this.matchingSearchStacks.add( stack );
 			}
@@ -421,7 +420,7 @@ public class GuiEssentiaCellTerminal
 		int numberOfSearchMatches = this.matchingSearchStacks.size();
 
 		// Calculate the row offset
-		int rowOffset = this.currentScroll * WIDGETS_PER_ROW;
+		int rowOffset = this.currentScroll * GuiConstants_ECT.WIDGETS_PER_ROW;
 
 		// Update each widget
 		int matchIndex = -1;
@@ -462,7 +461,7 @@ public class GuiEssentiaCellTerminal
 		Minecraft.getMinecraft().renderEngine.bindTexture( GuiTextureManager.ESSENTIA_TERMINAL.getTexture() );
 
 		// Draw the gui
-		this.drawTexturedModalRect( this.guiLeft, this.guiTop - GUI_OFFSET_Y, 0, 0, this.xSize, this.ySize );
+		this.drawTexturedModalRect( this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize );
 
 		// Draw the search field.
 		this.searchBar.drawTextBox();
@@ -478,7 +477,7 @@ public class GuiEssentiaCellTerminal
 		super.drawGuiContainerForegroundLayer( mouseX, mouseY );
 
 		// Draw the title
-		this.fontRendererObj.drawString( this.guiTitle, TITLE_POS_X, TITLE_POS_Y, 0 );
+		this.fontRendererObj.drawString( this.guiTitle, GuiConstants_ECT.TITLE_POS_X, GuiConstants_ECT.TITLE_POS_Y, 0 );
 
 		// Draw the widgets
 		this.drawWidgets( mouseX, mouseY );
@@ -501,18 +500,18 @@ public class GuiEssentiaCellTerminal
 
 			// Draw the name
 			this.fontRendererObj.drawString( this.selectedInfoNamePrefix + aspectName,
-				SELECTED_INFO_POS_X, SELECTED_INFO_NAME_POS_Y, 0 );
+				GuiConstants_ECT.SELECTED_INFO_POS_X, GuiConstants_ECT.SELECTED_INFO_NAME_POS_Y, 0 );
 
 			// Draw the amount
 			this.fontRendererObj.drawString( this.selectedInfoAmountPrefix + this.cacheAmountDisplay,
-				SELECTED_INFO_POS_X, SELECTED_INFO_AMOUNT_POS_Y, 0 );
+				GuiConstants_ECT.SELECTED_INFO_POS_X, GuiConstants_ECT.SELECTED_INFO_AMOUNT_POS_Y, 0 );
 		}
 	}
 
 	@Override
 	protected ScrollbarParams getScrollbarParameters()
 	{
-		return new ScrollbarParams( SCROLLBAR_POS_X, SCROLLBAR_POS_Y, SCROLLBAR_HEIGHT );
+		return new ScrollbarParams( GuiConstants_ECT.SCROLLBAR_POS_X, GuiConstants_ECT.SCROLLBAR_POS_Y, GuiConstants_ECT.SCROLLBAR_HEIGHT );
 	}
 
 	/**
@@ -581,8 +580,7 @@ public class GuiEssentiaCellTerminal
 					{
 						// Check if the aspect is to be crafted
 						if( ( !isRightClick && widget.hasAspect() && widget.getCraftable() ) &&
-										( viewingCraftable
-										|| ( isMiddleClick || ( isLeftClick && ( widget.getAmount() == 0 ) ) ) ) )
+										( viewingCraftable || ( isMiddleClick || ( isLeftClick && ( widget.getAmount() == 0 ) ) ) ) )
 						{
 							// Send request
 							Packet_S_EssentiaCellTerminal.sendAutoCraft( this.player, widget.getAspect() );
@@ -600,10 +598,8 @@ public class GuiEssentiaCellTerminal
 		}
 
 		// Is the mouse over the search bar?
-		boolean mouseOverSearchBar = ( mouseX >= this.searchBar.xPosition )
-						&& ( mouseX < ( this.searchBar.xPosition + this.searchBar.width ) )
-						&& ( mouseY >= this.searchBar.yPosition )
-						&& ( mouseY < ( this.searchBar.yPosition + this.searchBar.height ) );
+		boolean mouseOverSearchBar = ( mouseX >= this.searchBar.xPosition ) && ( mouseX < ( this.searchBar.xPosition + this.searchBar.width ) ) &&
+						( mouseY >= this.searchBar.yPosition ) && ( mouseY < ( this.searchBar.yPosition + this.searchBar.height ) );
 		if( mouseOverSearchBar )
 		{
 			// Left click?
@@ -665,7 +661,7 @@ public class GuiEssentiaCellTerminal
 	protected void onMouseWheel( final int deltaZ, final int mouseX, final int mouseY )
 	{
 		// Is the mouse inside of, or to the left of, the GUI?
-		if( mouseX > ( this.guiLeft + GUI_WIDTH ) )
+		if( mouseX > ( this.guiLeft + GuiConstants_ECT.GUI_WIDTH ) )
 		{
 			// Mouse is to the right of the gui
 			return;
@@ -693,7 +689,7 @@ public class GuiEssentiaCellTerminal
 
 	/**
 	 * Draw the widgets
-	 * 
+	 *
 	 * @param mouseX
 	 * @param mouseY
 	 */
@@ -776,9 +772,9 @@ public class GuiEssentiaCellTerminal
 
 		// Set up the search bar
 		this.searchBar = new GuiTextField( this.fontRendererObj,
-						this.guiLeft + SEARCH_X_OFFSET,
-						this.guiTop + SEARCH_Y_OFFSET,
-						SEARCH_WIDTH, SEARCH_HEIGHT );
+						this.guiLeft + GuiConstants_ECT.SEARCH_X_OFFSET,
+						this.guiTop + GuiConstants_ECT.SEARCH_Y_OFFSET,
+						GuiConstants_ECT.SEARCH_WIDTH, GuiConstants_ECT.SEARCH_HEIGHT );
 
 		// Set the search bar to draw in the foreground
 		this.searchBar.setEnableBackgroundDrawing( false );
@@ -787,23 +783,23 @@ public class GuiEssentiaCellTerminal
 		this.searchBar.setFocused( false );
 
 		// Set maximum length
-		this.searchBar.setMaxStringLength( SEARCH_MAX_CHARS );
+		this.searchBar.setMaxStringLength( GuiConstants_ECT.SEARCH_MAX_CHARS );
 
 		// Clear any existing buttons
 		this.buttonList.clear();
 
 		// Add the sort mode button
 		this.buttonSortingMode = new GuiButtonSortingMode( 0,
-						this.guiLeft + BUTTON_SORT_MODE_POS_X,
-						this.guiTop + BUTTON_SORT_MODE_POS_Y,
-						MODE_BUTTON_SIZE, MODE_BUTTON_SIZE );
+						this.guiLeft + GuiConstants_ECT.BUTTON_SORT_MODE_POS_X,
+						this.guiTop + GuiConstants_ECT.BUTTON_SORT_MODE_POS_Y,
+						GuiConstants_ECT.MODE_BUTTON_SIZE, GuiConstants_ECT.MODE_BUTTON_SIZE );
 		this.buttonList.add( this.buttonSortingMode );
 
 		// Add view type button
 		this.buttonViewMode = new GuiButtonViewType( 1,
-						this.guiLeft + BUTTON_VIEW_MODE_POS_X,
-						this.guiTop + BUTTON_VIEW_MODE_POS_Y,
-						MODE_BUTTON_SIZE, MODE_BUTTON_SIZE );
+						this.guiLeft + GuiConstants_ECT.BUTTON_VIEW_MODE_POS_X,
+						this.guiTop + GuiConstants_ECT.BUTTON_VIEW_MODE_POS_Y,
+						GuiConstants_ECT.MODE_BUTTON_SIZE, GuiConstants_ECT.MODE_BUTTON_SIZE );
 		this.buttonList.add( this.buttonViewMode );
 	}
 
@@ -822,7 +818,7 @@ public class GuiEssentiaCellTerminal
 
 	/**
 	 * Called when the server sends a full list of network aspects.
-	 * 
+	 *
 	 * @param aspectStackList
 	 */
 	public void onReceiveAspectList( final Collection<IAspectStack> aspectStackList )
@@ -836,7 +832,7 @@ public class GuiEssentiaCellTerminal
 
 	/**
 	 * Called when an aspect in the list changes amount.
-	 * 
+	 *
 	 * @param change
 	 */
 	public void onReceiveAspectListChange( final IAspectStack change )
@@ -851,7 +847,7 @@ public class GuiEssentiaCellTerminal
 
 	/**
 	 * Called when the server sends a change to the selected aspect.
-	 * 
+	 *
 	 * @param selectedAspect
 	 */
 	public void onReceiveSelectedAspect( final Aspect selectedAspect )
@@ -865,7 +861,7 @@ public class GuiEssentiaCellTerminal
 
 	/**
 	 * Called when the server sends a change in the sorting mode.
-	 * 
+	 *
 	 * @param sortMode
 	 */
 	public void onViewingModesChanged( final AspectStackComparatorMode sortMode, final ViewItems viewMode )
@@ -882,7 +878,7 @@ public class GuiEssentiaCellTerminal
 
 	/**
 	 * Called when a new view mode is sent.
-	 * 
+	 *
 	 * @param mode
 	 */
 	public void onViewModeChanged( final ViewItems mode )
